@@ -1,0 +1,8 @@
+pyinstaller
+python-socketio[asyncio]
+python-socketio[asyncio_client]
+eventlet
+flask
+requests
+websocket-client
+python-dotenv

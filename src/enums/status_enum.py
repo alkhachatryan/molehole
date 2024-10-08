@@ -1,0 +1,5 @@
+from enum import Enum
+
+class StatusEnum(str, Enum):
+    SUCCESSFUL_CONNECTION = 'SUCCESSFUL_CONNECTION'
+    AUTH_FAILED = 'SUCCESSFUL_CONNECTION'
