@@ -8,10 +8,11 @@ class EventHandler:
     def __init__(self, sio, active_connections):
         self.sio = sio
         self.active_connections = active_connections
+        self._command_runner = CommandRunner()
 
         # Register event handlers
-        self.sio.on_event('connect', self.connect)
-        self.sio.on_event('cmd', self.cmd)
+        self.sio.on('connect', self.connect)
+        self.sio.on('cmd', self.cmd)
     # todo disconnect
     def connect(self, sid, environ, auth):
         """Handles new connections."""
@@ -29,16 +30,17 @@ class EventHandler:
 
     def cmd(self, sid, command):
         """Handles command events from clients."""
+        connection = self.active_connections[sid]
         if not command:
             self.sio.emit('command_output', {
                 'output': '',
-                'state': self.active_connections[sid].state.__dict__,
+                'state': connection.state.__dict__,
             }, to=sid)
             return
 
         # Run the command using CommandRunner and send the output back to the client
-        output = CommandRunner.run_command(sid, command)
+        output = self._command_runner.run_command(connection, command)
         self.sio.emit('command_output', {
             'output': output,
-            'state': self.active_connections[sid].state.__dict__,
+            'state': connection.state.__dict__,
         }, to=sid)
