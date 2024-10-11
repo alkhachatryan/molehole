@@ -1,5 +1,4 @@
 import socketio
-import threading
 from dotenv import load_dotenv
 import os
 from enums.status_enum import StatusEnum
