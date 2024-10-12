@@ -1,0 +1,14 @@
+services:
+    ubuntu_server:
+        container_name: molehole_testing_ubuntu_server
+        volumes:
+            - ./volumes/ubuntu:/var/www/html
+        build:
+            context: .
+            dockerfile: Dockerfile-ubuntu
+
+#    centos_server:
+#        container_name: molehole_testing_centos_server
+#        build:
+#            context: .
+#            dockerfile: docker/Dockerfile-centos
