@@ -40,7 +40,7 @@ class TestLinuxCommands(ABC):
         assert "" == output
         self.run_client_command("cd ../")
         output = self.run_client_command("ls")
-        assert output.startswith('app\r\n')
+        assert 'app' in output and 'dev' in output
 
     def test_cd_command(self):
         wrong_path = '/this/path/not/exists'

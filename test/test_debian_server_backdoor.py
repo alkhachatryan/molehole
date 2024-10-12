@@ -1,7 +1,7 @@
 import pytest
 from .abs_test_case import TestLinuxCommands
 
-class TestUbuntuServerBackdoor(TestLinuxCommands):
+class TestDebianServerBackdoor(TestLinuxCommands):
     ip = "molehole_testing_debian_server"
 
     def test_distro_specific_commands(self):
