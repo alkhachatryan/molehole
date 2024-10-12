@@ -21,5 +21,5 @@ EventHandler(sio, active_connections)
 if __name__ == '__main__':
     # Start the eventlet server
     eventlet.wsgi.server(
-        eventlet.listen(('0.0.0.0', int(os.getenv('SERVER_PORT')))), app
+        eventlet.listen(('0.0.0.0', int(os.getenv('PORT')))), app
     )

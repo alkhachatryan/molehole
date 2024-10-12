@@ -6,3 +6,5 @@ flask
 requests
 websocket-client
 python-dotenv
+pexpect
+pytest
