@@ -1,14 +1,75 @@
 services:
+    python_app:
+        container_name: molehole_testing_python_app
+        build:
+            context: ../../
+            dockerfile: docker/_testing/python_app.Dockerfile
+        volumes:
+            - molehole_dist:/app/dist
+            - ../../:/app
+        networks:
+            - molehole_local_network
+
     ubuntu_server:
         container_name: molehole_testing_ubuntu_server
-        volumes:
-            - ./volumes/ubuntu:/var/www/html
         build:
-            context: .
-            dockerfile: Dockerfile-ubuntu
+            context: ../../docker/_testing/ubuntu
+            dockerfile: ubuntu.Dockerfile
+        volumes:
+            - ./volumes/dummy_fs:/var/www/html
+            - molehole_dist:/opt/sys/kernel/molehole
+        networks:
+            - molehole_local_network
 
-#    centos_server:
-#        container_name: molehole_testing_centos_server
-#        build:
-#            context: .
-#            dockerfile: docker/Dockerfile-centos
+    centos_server:
+        container_name: molehole_testing_centos_server
+        build:
+            context: ../../docker/_testing/centos
+            dockerfile: centos.Dockerfile
+        volumes:
+            - ./volumes/dummy_fs:/var/www/html
+            - molehole_dist:/opt/sys/kernel/molehole
+        networks:
+            - molehole_local_network
+
+    debian_server:
+        container_name: molehole_testing_debian_server
+        build:
+            context: ../../docker/_testing/debian
+            dockerfile: debian.Dockerfile
+        volumes:
+            - ./volumes/dummy_fs:/var/www/html
+            - molehole_dist:/opt/sys/kernel/molehole
+        networks:
+            - molehole_local_network
+
+    fedora_server:
+        container_name: molehole_testing_fedora_server
+        build:
+            context: ../../docker/_testing/fedora
+            dockerfile: fedora.Dockerfile
+        volumes:
+            - ./volumes/dummy_fs:/var/www/html
+            - molehole_dist:/opt/sys/kernel/molehole
+        networks:
+            - molehole_local_network
+
+    arch_server:
+        container_name: molehole_testing_arch_server
+        build:
+            context: ../../docker/_testing/arch
+            dockerfile: arch.Dockerfile
+        volumes:
+            - ./volumes/dummy_fs:/var/www/html
+            - molehole_dist:/opt/sys/kernel/molehole
+        networks:
+            - molehole_local_network
+
+volumes:
+    molehole_dist:
+        name: molehole_dist
+
+networks:
+    molehole_local_network:
+        name: molehole_local_network
+        driver: bridge

@@ -1,4 +1,5 @@
 import os.path
+import platform
 import re
 import subprocess
 
@@ -62,5 +63,40 @@ class CommandRunner:
 
     @staticmethod
     def get_server_executable():
-        bash_path = subprocess.run(["which", "bash"], capture_output=True, text=True)
-        return bash_path.stdout.strip() or '/bin/bash'
+        system_name = platform.system().lower()
+
+        # Check if we're on Linux-based systems
+        if system_name == 'linux':
+            # Try using 'which' to find bash if available
+            try:
+                bash_path = subprocess.run(["which", "bash"], capture_output=True, text=True)
+                if bash_path.returncode == 0 and bash_path.stdout.strip():
+                    return bash_path.stdout.strip()
+            except FileNotFoundError:
+                # If 'which' is not available, manually look for bash in known locations
+                bash_locations = ["/bin/bash", "/usr/bin/bash", "/usr/local/bin/bash"]
+                for path in bash_locations:
+                    if os.path.exists(path):
+                        return path
+
+        # Check if we're on Mac (Darwin) or BSD systems
+        elif system_name == 'darwin' or 'bsd' in system_name:
+            try:
+                bash_path = subprocess.run(["which", "bash"], capture_output=True, text=True)
+                if bash_path.returncode == 0 and bash_path.stdout.strip():
+                    return bash_path.stdout.strip()
+            except FileNotFoundError:
+                # For MacOS, common locations for bash
+                bash_locations = ["/bin/bash", "/usr/local/bin/bash"]
+                for path in bash_locations:
+                    if os.path.exists(path):
+                        return path
+
+        elif system_name == 'windows':
+            bash_path = "C:\\Program Files\\Git\\bin\\bash.exe"
+            if os.path.exists(bash_path):
+                return bash_path
+            else:
+                return 'cmd.exe'
+
+        return '/bin/bash'  # Default executable
