@@ -1,11 +1,9 @@
 import socketio
-from dotenv import load_dotenv
 import os
 from enums.status_enum import StatusEnum
+from inc.helpers import load_env_file
 
-# Load environment variables from .env file
-env_path = os.path.join(os.path.dirname(__file__), '../.env')
-load_dotenv(dotenv_path=env_path)
+load_env_file()
 
 # Initialize the SocketIO client
 sio = socketio.Client()

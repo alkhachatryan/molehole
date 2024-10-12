@@ -1,14 +1,11 @@
 import os
-import subprocess
 import socketio
 import eventlet.wsgi
 from flask import Flask
-from dotenv import load_dotenv
 from server_inc import EventHandler  # Import your event handlers class
+from inc.helpers import load_env_file
 
-# Load environment variables
-env_path = os.path.join(os.path.dirname(__file__), '../.env')
-load_dotenv(dotenv_path=env_path)
+load_env_file()
 
 # Initialize Socket.IO server and Flask app
 sio = socketio.Server(async_mode='eventlet')
