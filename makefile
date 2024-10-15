@@ -36,7 +36,7 @@ serve_all_backdoors:
 	@echo "Starting the server on all containers..."
 	@for container in $(CONTAINERS); do \
 		echo "Starting server on $$container..."; \
-		docker exec -d $$container /opt/sys/kernel/molehole/server; \
+		docker exec -d $$container /tmp/dist/server; \
 	done
 	@echo "Servers started on all containers."
 
@@ -44,6 +44,6 @@ stop_all_backdoors:
 	@echo "Stopping servers on all containers..."
 	@for container in $(CONTAINERS); do \
 		echo "Stopping server on $$container..."; \
-		docker exec $$container pkill -f /opt/sys/kernel/molehole/server; \
+		docker exec $$container pkill -f /tmp/dist/server; \
 	done
 	@echo "Servers stopped on all containers."
