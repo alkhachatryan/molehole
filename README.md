@@ -1,4 +1,6 @@
-# Molehole - websocket based, client-to-server cross-platform backdoor
+# Molehole
+
+ Websocket based, client-to-server cross-platform backdoor
 
 ![image](https://github.com/user-attachments/assets/e33c0b56-8def-4bcc-a05b-b87d28ba9a7f)
 
