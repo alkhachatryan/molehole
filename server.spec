@@ -3,7 +3,7 @@
 
 a = Analysis(
     ['/app/src/server.py'],
-    pathex=[],
+    pathex=['/app/src'],
     binaries=[],
     datas=[
         ('.env', '.'),

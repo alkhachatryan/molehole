@@ -2,7 +2,7 @@ import os
 import socketio
 import eventlet.wsgi
 from flask import Flask
-from server_inc import EventHandler  # Import your event handlers class
+from server_inc import EventHandler
 from inc.helpers import load_env_file
 
 load_env_file()
