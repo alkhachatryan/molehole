@@ -5,7 +5,7 @@ services:
             context: ../../
             dockerfile: docker/_testing/python_app.Dockerfile
         volumes:
-            - molehole_dist:/app/dist
+            - molehole_dist:/tmp/dist
             - ../../:/app
         networks:
             - molehole_local_network
@@ -17,7 +17,7 @@ services:
             dockerfile: ubuntu.Dockerfile
         volumes:
             - ./volumes/dummy_fs:/var/www/html
-            - molehole_dist:/opt/sys/kernel/molehole
+            - molehole_dist:/tmp/dist
         networks:
             - molehole_local_network
 
@@ -28,7 +28,7 @@ services:
             dockerfile: centos.Dockerfile
         volumes:
             - ./volumes/dummy_fs:/var/www/html
-            - molehole_dist:/opt/sys/kernel/molehole
+            - molehole_dist:/tmp/dist
         networks:
             - molehole_local_network
 
@@ -39,7 +39,7 @@ services:
             dockerfile: debian.Dockerfile
         volumes:
             - ./volumes/dummy_fs:/var/www/html
-            - molehole_dist:/opt/sys/kernel/molehole
+            - molehole_dist:/tmp/dist
         networks:
             - molehole_local_network
 
@@ -50,7 +50,7 @@ services:
             dockerfile: fedora.Dockerfile
         volumes:
             - ./volumes/dummy_fs:/var/www/html
-            - molehole_dist:/opt/sys/kernel/molehole
+            - molehole_dist:/tmp/dist
         networks:
             - molehole_local_network
 
@@ -61,7 +61,7 @@ services:
             dockerfile: arch.Dockerfile
         volumes:
             - ./volumes/dummy_fs:/var/www/html
-            - molehole_dist:/opt/sys/kernel/molehole
+            - molehole_dist:/tmp/dist
         networks:
             - molehole_local_network
 
