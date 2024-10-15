@@ -32,7 +32,6 @@ restart: stop start
 rebuild:
 	@docker compose -f docker/_testing/docker-compose-testing.yml up -d --build && docker compose -f docker/_testing/docker-compose-testing.yml start
 
-# Command to start the server on all containers
 serve_all_backdoors:
 	@echo "Starting the server on all containers..."
 	@for container in $(CONTAINERS); do \
@@ -41,7 +40,6 @@ serve_all_backdoors:
 	done
 	@echo "Servers started on all containers."
 
-# Cleanup command, if you want to stop the servers
 stop_all_backdoors:
 	@echo "Stopping servers on all containers..."
 	@for container in $(CONTAINERS); do \
