@@ -1,0 +1,39 @@
+name: Run Tests on Pull Request
+
+on:
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up Python (you can specify the desired Python version here)
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      # Install dependencies (if needed)
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y make
+
+      # Run sudo make start
+      - name: Run make start
+        run: sudo make start
+
+      # Run sudo make serve_all_backdoors
+      - name: Run make serve_all_backdoors
+        run: sudo make serve_all_backdoors
+
+      # Run pytest inside the Python container
+      - name: Run Pytest
+        run: |
+          docker exec -it molehole_testing_python_app pytest
