@@ -19,10 +19,6 @@ jobs:
         options: --entrypoint ""
         volumes:
           - ./dist:/app/dist
-        steps:
-          - name: Check out the repository
-            uses: actions/checkout@v3
-
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
