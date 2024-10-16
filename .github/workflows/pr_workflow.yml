@@ -25,13 +25,13 @@ jobs:
       run: |
         cd docker/_testing
 
-    # Start the Python container to build the dist file first
+    # Build the Python container and dist file
     - name: Build dist file in Python container
       run: |
-        sudo docker-compose -f docker/_testing/docker-compose-testing.yml up -d python_app
-        sudo docker-compose -f docker/_testing/docker-compose-testing.yml exec python_app sh -c "pyinstaller server.spec && ls /tmp/dist"
+        sudo docker-compose -f docker/_testing/docker-compose-testing.yml up -d --build python_app
+        sudo docker-compose -f docker/_testing/docker-compose-testing.yml exec -T python_app sh -c "pyinstaller server.spec && ls /tmp/dist"
       
-    # Start all other containers after the dist is generated
+    # Start the rest of the containers after the dist is generated
     - name: Start the rest of the containers
       run: |
         sudo docker-compose -f docker/_testing/docker-compose-testing.yml up -d ubuntu_server centos_server debian_server fedora_server arch_server
@@ -39,13 +39,13 @@ jobs:
     # Check if the dist file exists in all containers
     - name: Verify dist file in all containers
       run: |
-        sudo docker-compose -f docker/_testing/docker-compose-testing.yml exec ubuntu_server ls /tmp/dist
-        sudo docker-compose -f docker/_testing/docker-compose-testing.yml exec centos_server ls /tmp/dist
-        sudo docker-compose -f docker/_testing/docker-compose-testing.yml exec debian_server ls /tmp/dist
-        sudo docker-compose -f docker/_testing/docker-compose-testing.yml exec fedora_server ls /tmp/dist
-        sudo docker-compose -f docker/_testing/docker-compose-testing.yml exec arch_server ls /tmp/dist
+        sudo docker-compose -f docker/_testing/docker-compose-testing.yml exec -T ubuntu_server ls /tmp/dist
+        sudo docker-compose -f docker/_testing/docker-compose-testing.yml exec -T centos_server ls /tmp/dist
+        sudo docker-compose -f docker/_testing/docker-compose-testing.yml exec -T debian_server ls /tmp/dist
+        sudo docker-compose -f docker/_testing/docker-compose-testing.yml exec -T fedora_server ls /tmp/dist
+        sudo docker-compose -f docker/_testing/docker-compose-testing.yml exec -T arch_server ls /tmp/dist
 
     # Run pytest in the python_app container
     - name: Run Pytest
       run: |
-        sudo docker-compose -f docker/_testing/docker-compose-testing.yml exec python_app pytest
+        sudo docker-compose -f docker/_testing/docker-compose-testing.yml exec -T python_app pytest
