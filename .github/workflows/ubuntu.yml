@@ -16,7 +16,6 @@ jobs:
     services:
       python_app:
         image: python:3.9-slim
-        options: --entrypoint ""
         volumes:
           - ./dist:/app/dist
     steps:
