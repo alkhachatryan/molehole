@@ -1,41 +1,42 @@
-name: Ubuntu Workflow
+name: Ubuntu Testing
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
-      - main
+      - master
   workflow_dispatch:
 
 jobs:
-  ubuntu-test:
+  build:
     runs-on: ubuntu-latest
 
     services:
-      python_app:
-        image: python:3.9-slim
-        volumes:
-          - ./dist:/app/dist
+      molehole_testing_ubuntu_server:
+        image: molehole_testing_ubuntu_server
+        ports:
+          - 80:80
+        options: >-
+          --network molehole_local_network
+
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      # Step 1: Build Python app and create dist file
-      - name: Build Python App and Create Dist
+      - name: Set up Docker
         run: |
-          docker build -t python-app -f docker/_testing/python_app.Dockerfile .
-          docker run --rm -v $PWD/dist:/app/dist python-app
+          docker-compose -f docker-compose.yml up -d
 
-      # Step 2: Copy dist file to the Ubuntu container and serve it
-      - name: Build and Serve on Ubuntu
+      - name: Copy .env.example to .env
         run: |
-          docker build -t ubuntu-server -f docker/_testing/ubuntu.Dockerfile .
-          docker run --rm -v $PWD/dist:/app/dist ubuntu-server /app/dist/server &
-          sleep 5  # wait for the server to start
+          docker exec -it molehole_testing_ubuntu_server cp /app/.env.example /app/.env
 
-      # Step 3: Run pytest in Python container to test the server
-      - name: Run pytest
+      - name: Install dependencies and build the application
         run: |
-          docker exec python_app pytest /app/tests
+          docker exec -it molehole_testing_ubuntu_server sh -c "pip install -r /app/requirements.txt && pyinstaller /app/server.spec"
+
+      - name: Run tests
+        run: |
+          docker exec -it molehole_testing_ubuntu_server pytest /app/tests --disable-warnings
+
+      - name: Clean up
+        run: docker-compose -f docker-compose.yml down
