@@ -1,40 +1,46 @@
 name: Run Tests on Pull Request
 
 on:
-  workflow_dispatch:
   pull_request:
     branches:
       - '**'
+  workflow_dispatch:  # Manual trigger
 
 jobs:
-  run-tests:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
-      # Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    # Checkout the repository
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      # Set up Python (you can specify the desired Python version here)
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
+    # Install Docker Compose (if necessary)
+    - name: Install Docker Compose
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker-compose
 
-      # Install dependencies (if needed)
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y make
+    # Start the Python container to build the dist file first
+    - name: Build dist file in Python container
+      run: |
+        sudo docker-compose up -d python_app
+        sudo docker-compose exec python_app sh -c "pyinstaller server.spec && ls /tmp/dist"
+      
+    # Start all other containers after the dist is generated
+    - name: Start the rest of the containers
+      run: |
+        sudo docker-compose up -d ubuntu_server centos_server debian_server fedora_server arch_server
 
-      # Run sudo make start
-      - name: Run make start
-        run: sudo make start
+    # Check if the dist file exists in all containers
+    - name: Verify dist file in all containers
+      run: |
+        sudo docker-compose exec ubuntu_server ls /tmp/dist
+        sudo docker-compose exec centos_server ls /tmp/dist
+        sudo docker-compose exec debian_server ls /tmp/dist
+        sudo docker-compose exec fedora_server ls /tmp/dist
+        sudo docker-compose exec arch_server ls /tmp/dist
 
-      # Run sudo make serve_all_backdoors
-      - name: Run make serve_all_backdoors
-        run: sudo make serve_all_backdoors
-
-      # Run pytest inside the Python container
-      - name: Run Pytest
-        run: |
-          docker exec -it molehole_testing_python_app pytest
+    # Run pytest in the python_app container
+    - name: Run Pytest
+      run: |
+        sudo docker-compose exec python_app pytest
