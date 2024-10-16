@@ -8,45 +8,27 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-22.04-large
+    runs-on: ubuntu:latest
 
     steps:
-    # Checkout the repository
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Install Docker Compose (if necessary)
     - name: Install Docker Compose
       run: |
         sudo apt-get update
         sudo apt-get install -y docker-compose
 
-    # Navigate to the directory containing the docker-compose-testing.yml
-    - name: Navigate to Docker Testing Directory
-      run: |
-        cd docker/_testing
+    - name: Copying env file
+      run: cp .env.test.example .env
 
-    # Build the Python container and dist file
     - name: Build dist file in Python container
-      run: |
-        sudo docker-compose -f docker/_testing/docker-compose-testing.yml up -d --build python_app
-        sudo docker-compose -f docker/_testing/docker-compose-testing.yml exec -T python_app sh -c "pyinstaller server.spec && ls /tmp/dist"
+      run: sudo make start
+
+    - name: Serve all backdoors
+      run: sudo make serve_all_backdoors
       
-    # Start the rest of the containers after the dist is generated
-    - name: Start the rest of the containers
-      run: |
-        sudo docker-compose -f docker/_testing/docker-compose-testing.yml up -d ubuntu_server centos_server debian_server fedora_server arch_server
-
-    # Check if the dist file exists in all containers
-    - name: Verify dist file in all containers
-      run: |
-        sudo docker-compose -f docker/_testing/docker-compose-testing.yml exec -T ubuntu_server ls /tmp/dist
-        sudo docker-compose -f docker/_testing/docker-compose-testing.yml exec -T centos_server ls /tmp/dist
-        sudo docker-compose -f docker/_testing/docker-compose-testing.yml exec -T debian_server ls /tmp/dist
-        sudo docker-compose -f docker/_testing/docker-compose-testing.yml exec -T fedora_server ls /tmp/dist
-        sudo docker-compose -f docker/_testing/docker-compose-testing.yml exec -T arch_server ls /tmp/dist
-
     # Run pytest in the python_app container
     - name: Run Pytest
       run: |
-        sudo docker-compose -f docker/_testing/docker-compose-testing.yml exec -T python_app pytest
+        sudo docker exec -d molehole_testing_python_app pytest
