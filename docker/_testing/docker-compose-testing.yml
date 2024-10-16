@@ -5,7 +5,7 @@ services:
             context: ../../
             dockerfile: docker/_testing/python_app.Dockerfile
         volumes:
-            - molehole_dist:/tmp/dist
+            - molehole_dist:/app/dist
             - ../../:/app
         networks:
             - molehole_local_network
