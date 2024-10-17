@@ -3,8 +3,8 @@ name: Run Tests on Pull Request
 on:
   pull_request:
     branches:
-      - '**'
-  workflow_dispatch:  # Manual trigger
+      - master
+    types: [opened, synchronize] 
 
 jobs:
   run-tests:
@@ -30,11 +30,11 @@ jobs:
         run: sudo make start
 
       - name: Generate backdoor file
-        run: docker exec molehole_testing_python_app pyinstaller server.spec
+        run: sudo docker exec molehole_testing_python_app pyinstaller server.spec
 
       - name: Run make serve_all_backdoors
         run: sudo make serve_all_backdoors
 
       - name: Run Pytest
         run: |
-          docker exec molehole_testing_python_app pytest
+          sudo docker exec molehole_testing_python_app pytest
