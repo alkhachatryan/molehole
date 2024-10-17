@@ -29,6 +29,9 @@ jobs:
       - name: Run make start
         run: sudo make start
 
+      - name: Generate backdoor file
+        run: docker exec molehole_testing_python_app pyinstaller server.spec
+
       - name: Run make serve_all_backdoors
         run: sudo make serve_all_backdoors
 
