@@ -4,34 +4,33 @@ on:
   pull_request:
     branches:
       - '**'
-  workflow_dispatch:  # Manual trigger
 
 jobs:
-  build-and-test:
+  run-tests:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Install Docker Compose
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y docker-compose
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
-    - name: Copying env file
-      run: cp .env.test.example .env
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y make
 
-    - name: Build dist file in Python container
-      run: sudo make start
+      - name: Creating env file
+        run: cp .env.test.example .env
 
-    - name: Create backdoor file
-      run: sudo docker exec molehole_testing_python_app pyinstaller server.spec
+      - name: Run make start
+        run: sudo make start
 
-    - name: Serve all backdoors
-      run: sudo make serve_all_backdoors
-      
-    # Run pytest in the python_app container
-    - name: Run Pytest
-      run: |
-        sudo docker exec molehole_testing_python_app pytest
+      - name: Run make serve_all_backdoors
+        run: sudo make serve_all_backdoors
+
+      - name: Run Pytest
+        run: |
+          docker exec -it molehole_testing_python_app pytest
