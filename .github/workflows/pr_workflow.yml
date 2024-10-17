@@ -34,4 +34,4 @@ jobs:
     # Run pytest in the python_app container
     - name: Run Pytest
       run: |
-        sudo docker exec -d molehole_testing_python_app pytest
+        sudo docker exec molehole_testing_python_app pytest
