@@ -26,7 +26,7 @@ jobs:
       run: sudo make start
 
     - name: Create backdoor file
-      run: sudo docker exec -d molehole_testing_python_app pyinstaller server.spec
+      run: sudo docker exec molehole_testing_python_app pyinstaller server.spec
 
     - name: Serve all backdoors
       run: sudo make serve_all_backdoors
