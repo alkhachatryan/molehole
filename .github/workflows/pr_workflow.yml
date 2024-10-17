@@ -25,6 +25,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y make
 
+      - name: Creating env file
+        run: cp .env.test.example .env
+
       # Run sudo make start
       - name: Run make start
         run: sudo make start
