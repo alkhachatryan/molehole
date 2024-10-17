@@ -36,7 +36,7 @@ serve_all_backdoors:
 	@echo "Starting the server on all containers..."
 	@for container in $(CONTAINERS); do \
 		echo "Starting server on $$container..."; \
-		docker exec $$container /tmp/dist/server; \
+		docker exec -d $$container /tmp/dist/server; \
 	done
 	@echo "Servers started on all containers."
 
