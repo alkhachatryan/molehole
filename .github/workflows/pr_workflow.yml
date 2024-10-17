@@ -37,4 +37,4 @@ jobs:
 
       - name: Run Pytest
         run: |
-          docker exec -it molehole_testing_python_app pytest
+          docker exec molehole_testing_python_app pytest
